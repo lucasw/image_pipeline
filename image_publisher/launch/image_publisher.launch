@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="filename0" default="$(find camera_calibration)/button.jpg"/>
+  <arg name="filename1" default="$(arg filename0)"/>
+  <arg name="manager" default="nodelet_manager" />
+  <arg name="launch_manager" default="true" />
+  <arg name="respawn" default="false" />
+
+  <arg     if="$(arg respawn)" name="bond" value="" />
+  <arg unless="$(arg respawn)" name="bond" value="--no-bond" />
+
+  <node name="$(arg manager)" pkg="nodelet" type="nodelet"
+        args="manager" output="screen"
+        if="$(arg launch_manager)">
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="image_publisher0"
+        args="load image_publisher/image_publisher $(arg manager) $(arg bond)"
+	      respawn="$(arg respawn)">
+    <param name="filename" value="$(arg filename0)"/>
+    <param name="publish_rate" value="1.0"/>
+  </node>
+
+  <node pkg="nodelet" type="nodelet" name="image_publisher1"
+        args="load image_publisher/image_publisher $(arg manager) $(arg bond)"
+	      respawn="$(arg respawn)">
+    <param name="filename" value="$(arg filename1)"/>
+    <param name="publish_rate" value="4.0"/>
+  </node>
+
+</launch>
