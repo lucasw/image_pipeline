@@ -49,7 +49,7 @@ namespace image_publisher {
 class ImagePublisherNodelet : public nodelet::Nodelet
 {
   typedef dynamic_reconfigure::Server<image_publisher::ImagePublisherConfig> ReconfigureServer;
-  std::shared_ptr<ReconfigureServer> srv;
+  boost::shared_ptr<ReconfigureServer> srv;
 
   image_transport::CameraPublisher pub_;
 
@@ -186,7 +186,7 @@ public:
     timer_ = nh_.createTimer(ros::Duration(1), &ImagePublisherNodelet::do_work, this);
 
     srv.reset(new ReconfigureServer(getPrivateNodeHandle()));
-    dynamic_reconfigure::Server<image_publisher::ImagePublisherConfig>::CallbackType f =
+    ReconfigureServer::CallbackType f =
       boost::bind(&ImagePublisherNodelet::reconfigureCallback, this, _1, _2);
     srv->setCallback(f);
   }
